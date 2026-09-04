@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -60,44 +59,6 @@ class _HomeShellState extends State<HomeShell> {
   }
 }
 
-class GlassSurface extends StatelessWidget {
-  final Widget child;
-  final BorderRadius borderRadius;
-  final Color color;
-
-  const GlassSurface({
-    super.key,
-    required this.child,
-    required this.borderRadius,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-        child: Container(
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: borderRadius,
-            border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.16),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
 class BottomPill extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onSelected;
@@ -118,82 +79,80 @@ class BottomPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassSurface(
-      borderRadius: BorderRadius.circular(30),
-      color: const Color(0xFF171326).withValues(alpha: 0.78),
-      child: SizedBox(
-        height: 58,
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Row(
-            children: List.generate(_items.length, (index) {
-              final item = _items[index];
-              final isActive = index == selected;
+    return Container(
+      height: 58,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF171326),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: List.generate(_items.length, (index) {
+          final item = _items[index];
+          final isActive = index == selected;
 
-              return Expanded(
-                flex: isActive ? 3 : 1,
-                child: Semantics(
-                  button: true,
-                  selected: isActive,
-                  label: item.label,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => onSelected(index),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeInOutCubic,
-                      height: 42,
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isActive ? 8 : 0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isActive
-                            ? Colors.white.withValues(alpha: 0.92)
-                            : const Color.fromARGB(0, 9, 9, 9),
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                      child: Center(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                item.icon,
-                                size: isActive ? 28 : 25,
-                                color: isActive
-                                    ? const Color(0xFF171326)
-                                    : const Color(0xFFB9B4C8),
-                              ),
-                              if (isActive) ...[
-                                const SizedBox(width: 1.2),
-                                Text(
-                                  item.label,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.clip,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Color.fromARGB(255, 1, 1, 2),
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -0.2,
-                                  ),
-                                ),
-                              ],
-                            ],
+          return Expanded(
+            flex: isActive ? 3 : 1,
+            child: Semantics(
+              button: true,
+              selected: isActive,
+              label: item.label,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => onSelected(index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeInOutCubic,
+                  height: 42,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isActive ? 8 : 0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? Colors.white
+                        : const Color.fromARGB(0, 9, 9, 9),
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            item.icon,
+                            size: isActive ? 28 : 25,
+                            color: isActive
+                                ? const Color(0xFF171326)
+                                : const Color(0xFFB9B4C8),
                           ),
-                        ),
+                          if (isActive) ...[
+                            const SizedBox(width: 1.2),
+                            Text(
+                              item.label,
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 1, 1, 2),
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                   ),
                 ),
-              );
-            }),
-          ),
-        ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -359,14 +318,12 @@ class CircleButton extends StatelessWidget {
   final IconData icon;
   const CircleButton({super.key, required this.icon});
   @override
-  Widget build(BuildContext context) => GlassSurface(
-        borderRadius: BorderRadius.circular(24),
-        color: Colors.white.withValues(alpha: 0.68),
-        child: SizedBox(
-          width: 42,
-          height: 42,
-          child: Icon(icon, size: 23),
-        ),
+  Widget build(BuildContext context) => Container(
+        width: 42,
+        height: 42,
+        decoration:
+            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        child: Icon(icon, size: 23),
       );
 }
 
