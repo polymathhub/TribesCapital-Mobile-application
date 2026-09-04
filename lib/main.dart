@@ -48,7 +48,7 @@ class _HomeShellState extends State<HomeShell> {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(52, 8, 52, 14),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 14),
           child: BottomPill(
             selected: index,
             onSelected: (value) => setState(() => index = value),
@@ -92,7 +92,7 @@ class BottomPill extends StatelessWidget {
           final isActive = index == selected;
 
           return Expanded(
-            flex: isActive ? 2 : 1,
+            flex: isActive ? 3 : 1,
             child: Semantics(
               button: true,
               selected: isActive,
