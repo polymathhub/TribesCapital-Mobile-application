@@ -1,16 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'app/app.dart' as experience;
 
-void main() => runApp(const TribesCapitalExperience());
-
-class TribesCapitalExperience extends StatelessWidget {
-  const TribesCapitalExperience({super.key});
-
-  @override
-  Widget build(BuildContext context) => const experience.TribesCapitalApp();
-}
+void main() => runApp(const TribesCapitalApp());
 
 class TribesCapitalApp extends StatelessWidget {
   const TribesCapitalApp({super.key});
