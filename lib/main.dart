@@ -130,7 +130,7 @@ class BottomPill extends StatelessWidget {
                                 : const Color(0xFFB9B4C8),
                           ),
                           if (isActive) ...[
-                            const SizedBox(width: 2),
+                            const SizedBox(width: 1.5),
                             Text(
                               item.label,
                               maxLines: 1,
