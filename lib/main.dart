@@ -44,12 +44,15 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: pages[index]),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(52, 8, 52, 14),
-        child: BottomPill(
-          selected: index,
-          onSelected: (value) => setState(() => index = value),
+      body: pages[index],
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(52, 8, 52, 14),
+          child: BottomPill(
+            selected: index,
+            onSelected: (value) => setState(() => index = value),
+          ),
         ),
       ),
     );
@@ -166,127 +169,130 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(0, 12, 22, 14),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8F8FA).withValues(alpha: 0.9),
-            border: Border(
-              bottom: BorderSide(
-                color: const Color(0xFF171326).withValues(alpha: 0.04),
-                width: 1,
+    return SafeArea(
+      bottom: false,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(0, 12, 22, 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8F8FA).withValues(alpha: 0.9),
+              border: Border(
+                bottom: BorderSide(
+                  color: const Color(0xFF171326).withValues(alpha: 0.04),
+                  width: 1,
+                ),
               ),
             ),
+            child: const Row(
+              children: [
+                BrandMenuButton(),
+                Spacer(),
+                Row(children: [
+                  CircleButton(icon: Icons.notifications_none_rounded),
+                  SizedBox(width: 12),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Color.fromARGB(255, 7, 6, 9),
+                    child: Icon(Icons.person, color: Colors.white, size: 22),
+                  ),
+                ]),
+              ],
+            ),
           ),
-          child: const Row(
-            children: [
-              BrandMenuButton(),
-              Spacer(),
-              Row(children: [
-                CircleButton(icon: Icons.notifications_none_rounded),
-                SizedBox(width: 12),
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Color.fromARGB(255, 7, 6, 9),
-                  child: Icon(Icons.person, color: Colors.white, size: 22),
+          Expanded(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(22, 0, 22, 28),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      const SizedBox(height: 14),
+                      const Text(
+                        'Hello Olaitan,',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.4,
+                          color: Color(0xFF171326),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Enabling the energy transition together.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 28, 27, 32),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const WalletCard(),
+                      const SizedBox(height: 16),
+                      const QuickActions(),
+                      const SizedBox(height: 16),
+                      const SectionCard(
+                        title: 'Community',
+                        child: CommunityGrid(),
+                      ),
+                      const SizedBox(height: 16),
+                      const SectionCard(
+                        title: 'Your Investments',
+                        child: Column(
+                          children: [
+                            InvestmentRow('GridFlex', 'Series A', '\$5,000.00',
+                                'May 12, 2024', Icons.bolt),
+                            InvestmentRow('Solarverse', 'Seed', '\$2,500.00',
+                                'May 10, 2024', Icons.wb_sunny_outlined),
+                            InvestmentRow('VoltEdge', 'Series A', '\$7,500.00',
+                                'May 8, 2024', Icons.battery_charging_full),
+                            InvestmentRow('EcoWatt', 'Seed', '\$3,250.00',
+                                'May 5, 2024', Icons.eco_outlined),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const SectionCard(
+                        title: 'Upcoming Events',
+                        child: Column(children: [
+                          EventRow(
+                              day: '20',
+                              month: 'MAY',
+                              title: 'Energy Tech Summit 2024',
+                              subtitle: 'Virtual Event'),
+                          Divider(height: 20),
+                          EventRow(
+                              day: '28',
+                              month: 'MAY',
+                              title: 'Investor Roundtable',
+                              subtitle: 'Private Event'),
+                        ]),
+                      ),
+                      const SizedBox(height: 16),
+                      const InsightsCarousel(),
+                      const SizedBox(height: 16),
+                      const SectionCard(
+                        title: 'Community Activity',
+                        child: Column(children: [
+                          ActivityRow('Sarah M. joined the community', '2h ago',
+                              Icons.person_add_alt_1),
+                          ActivityRow('VoltEdge raised \$18.3M in Series A',
+                              '5h ago', Icons.bolt),
+                          ActivityRow(
+                              'New report published: Global Energy Tech Outlook 2024',
+                              '1d ago',
+                              Icons.description_outlined),
+                        ]),
+                      ),
+                    ]),
+                  ),
                 ),
-              ]),
-            ],
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(22, 0, 22, 28),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    const SizedBox(height: 14),
-                    const Text(
-                      'Hello Olaitan,',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.4,
-                        color: Color(0xFF171326),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Enabling the energy transition together.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 28, 27, 32),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const WalletCard(),
-                    const SizedBox(height: 16),
-                    const QuickActions(),
-                    const SizedBox(height: 16),
-                    const SectionCard(
-                      title: 'Community',
-                      child: CommunityGrid(),
-                    ),
-                    const SizedBox(height: 16),
-                    const SectionCard(
-                      title: 'Your Investments',
-                      child: Column(
-                        children: [
-                          InvestmentRow('GridFlex', 'Series A', '\$5,000.00',
-                              'May 12, 2024', Icons.bolt),
-                          InvestmentRow('Solarverse', 'Seed', '\$2,500.00',
-                              'May 10, 2024', Icons.wb_sunny_outlined),
-                          InvestmentRow('VoltEdge', 'Series A', '\$7,500.00',
-                              'May 8, 2024', Icons.battery_charging_full),
-                          InvestmentRow('EcoWatt', 'Seed', '\$3,250.00',
-                              'May 5, 2024', Icons.eco_outlined),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const SectionCard(
-                      title: 'Upcoming Events',
-                      child: Column(children: [
-                        EventRow(
-                            day: '20',
-                            month: 'MAY',
-                            title: 'Energy Tech Summit 2024',
-                            subtitle: 'Virtual Event'),
-                        Divider(height: 20),
-                        EventRow(
-                            day: '28',
-                            month: 'MAY',
-                            title: 'Investor Roundtable',
-                            subtitle: 'Private Event'),
-                      ]),
-                    ),
-                    const SizedBox(height: 16),
-                    const InsightsCarousel(),
-                    const SizedBox(height: 16),
-                    const SectionCard(
-                      title: 'Community Activity',
-                      child: Column(children: [
-                        ActivityRow('Sarah M. joined the community', '2h ago',
-                            Icons.person_add_alt_1),
-                        ActivityRow('VoltEdge raised \$18.3M in Series A',
-                            '5h ago', Icons.bolt),
-                        ActivityRow(
-                            'New report published: Global Energy Tech Outlook 2024',
-                            '1d ago',
-                            Icons.description_outlined),
-                      ]),
-                    ),
-                  ]),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
