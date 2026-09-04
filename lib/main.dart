@@ -35,7 +35,7 @@ class _HomeShellState extends State<HomeShell> {
 
   final pages = const [
     HomePage(),
-    SimplePage(title: 'Learn', icon: Icons.school),
+    LearnPage(),
     SimplePage(title: 'Marketplace', icon: Icons.storefront),
     SimplePage(title: 'Community', icon: Icons.groups),
     SimplePage(title: 'Profile', icon: Icons.person),
@@ -1245,6 +1245,326 @@ class ActivityRow extends StatelessWidget {
             ),
           ],
         ),
+      );
+}
+
+class LearnPage extends StatefulWidget {
+  const LearnPage({super.key});
+
+  @override
+  State<LearnPage> createState() => _LearnPageState();
+}
+
+class _LearnPageState extends State<LearnPage> {
+  String selectedCategory = 'All';
+
+  static const categories = [
+    'All',
+    'Energy',
+    'Investing',
+    'Infrastructure',
+    'Climate',
+  ];
+
+  static const courses = [
+    _LearnCourse(
+      'Energy Investing 101',
+      'The foundations of investing in the energy transition.',
+      'Investing',
+      '72%',
+      0.72,
+      Icons.auto_graph_rounded,
+    ),
+    _LearnCourse(
+      'Inside the Modern Grid',
+      'Meet the systems making tomorrow\'s energy more resilient.',
+      'Infrastructure',
+      '2h 45m',
+      0,
+      Icons.bolt_rounded,
+    ),
+    _LearnCourse(
+      'Climate Technology Briefing',
+      'A practical field guide to the technologies worth watching.',
+      'Climate',
+      '3h 10m',
+      0,
+      Icons.eco_outlined,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final horizontalPadding = width >= 700 ? 56.0 : 22.0;
+    final visibleCourses = selectedCategory == 'All'
+        ? courses
+        : courses
+            .where((course) => course.category == selectedCategory)
+            .toList();
+
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(
+                horizontalPadding, 26, horizontalPadding, 28),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                const _LearnHeader(),
+                const SizedBox(height: 22),
+                const _FeaturedCourse(),
+                const SizedBox(height: 28),
+                const Text(
+                  'Explore by focus',
+                  style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF171326)),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 42,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      final active = category == selectedCategory;
+                      return ChoiceChip(
+                        label: Text(category),
+                        selected: active,
+                        onSelected: (_) =>
+                            setState(() => selectedCategory = category),
+                        selectedColor: const Color(0xFF171326),
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Color(0xFFE4E1E9)),
+                        labelStyle: TextStyle(
+                          color:
+                              active ? Colors.white : const Color(0xFF171326),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 28),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Your learning path',
+                      style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF171326)),
+                    ),
+                    Text('View all',
+                        style: TextStyle(
+                            color: Color(0xFF7137C6),
+                            fontWeight: FontWeight.w700)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ...visibleCourses.map((course) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _CourseCard(course: course),
+                    )),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearnCourse {
+  final String title;
+  final String description;
+  final String category;
+  final String progressLabel;
+  final double progress;
+  final IconData icon;
+
+  const _LearnCourse(this.title, this.description, this.category,
+      this.progressLabel, this.progress, this.icon);
+}
+
+class _LearnHeader extends StatelessWidget {
+  const _LearnHeader();
+
+  @override
+  Widget build(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('LEARNING HUB',
+                    style: TextStyle(
+                        color: Color(0xFF7137C6),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.5)),
+                SizedBox(height: 8),
+                Text('Make sense of what\'s next.',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF171326),
+                        height: 1.08)),
+                SizedBox(height: 8),
+                Text(
+                    'Ideas, insight and practical knowledge for the energy transition.',
+                    style: TextStyle(
+                        color: Color(0xFF706B78), fontSize: 14, height: 1.35)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          SvgPicture.asset('assets/community_resources.svg',
+              width: 58, height: 58),
+        ],
+      );
+}
+
+class _FeaturedCourse extends StatelessWidget {
+  const _FeaturedCourse();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(22),
+        decoration: BoxDecoration(
+          color: const Color(0xFF302047),
+          borderRadius: BorderRadius.circular(26),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF3B285A), Color(0xFF171326)],
+          ),
+          boxShadow: [
+            BoxShadow(
+                color: const Color(0xFF171326).withValues(alpha: 0.16),
+                blurRadius: 20,
+                offset: const Offset(0, 10))
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              const Text('CONTINUE LEARNING',
+                  style: TextStyle(
+                      color: Color(0xFFD8C5F7),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.3)),
+              Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                  decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: const Text('4h 20m',
+                      style: TextStyle(color: Colors.white70, fontSize: 11))),
+            ]),
+            const SizedBox(height: 16),
+            const Text('Energy Investing 101',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800)),
+            const SizedBox(height: 7),
+            const Text(
+                'Understand the infrastructure powering the next decade.',
+                style: TextStyle(
+                    color: Colors.white70, fontSize: 14, height: 1.35)),
+            const SizedBox(height: 22),
+            ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: const LinearProgressIndicator(
+                    value: 0.72,
+                    minHeight: 6,
+                    backgroundColor: Colors.white24,
+                    color: Color(0xFFD8C5F7))),
+            const SizedBox(height: 10),
+            const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('72% complete',
+                      style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600)),
+                  Text('Continue  →',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w800))
+                ]),
+          ],
+        ),
+      );
+}
+
+class _CourseCard extends StatelessWidget {
+  final _LearnCourse course;
+  const _CourseCard({required this.course});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: const Color(0xFFE7E3EC))),
+        child: Row(children: [
+          Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                  color: const Color(0xFFEDE3FC),
+                  borderRadius: BorderRadius.circular(17)),
+              child:
+                  Icon(course.icon, color: const Color(0xFF7137C6), size: 25)),
+          const SizedBox(width: 14),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Text(course.title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                        color: Color(0xFF171326))),
+                const SizedBox(height: 5),
+                Text(course.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 12, color: Color(0xFF706B78), height: 1.3)),
+                const SizedBox(height: 10),
+                Row(children: [
+                  Expanded(
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                              value: course.progress,
+                              minHeight: 4,
+                              backgroundColor: const Color(0xFFE9E5EF),
+                              color: const Color(0xFF7137C6)))),
+                  const SizedBox(width: 10),
+                  Text(course.progressLabel,
+                      style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF7137C6),
+                          fontWeight: FontWeight.w800))
+                ]),
+              ])),
+        ]),
       );
 }
 
